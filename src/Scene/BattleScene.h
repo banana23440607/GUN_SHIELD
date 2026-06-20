@@ -1,4 +1,5 @@
 #pragma once
+#include "../Utility/Common.h"
 #include "SceneBase.h"
 #include "../Network/Client.h"
 #include "../Network/Server.h"
