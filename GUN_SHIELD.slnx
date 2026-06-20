@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="GUN_SHIELD.vcxproj" Id="b9cacaae-bb6f-48a3-9386-490c5d31329b" />
+</Solution>
