@@ -1,8 +1,9 @@
-#include "../Utility/Common.h"
 #include "BattleScene.h"
 #include "SceneManager.h"
 #include "../Input/Input.h"
 #include "../Graphics/DX11Manager.h"
+
+static constexpr float FIXED_TIMESTEP = 1.0f / 60.0f;
 
 BattleScene::BattleScene(bool isHost, Client* client, Server* server)
     : m_isHost(isHost), m_client(client), m_server(server)
