@@ -1,5 +1,9 @@
 #pragma once
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include <Windows.h>
+#include <WinSock2.h>
+#include <WS2tcpip.h>
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <wrl/client.h>

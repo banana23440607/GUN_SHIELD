@@ -1,7 +1,5 @@
 #pragma once
 #include "Packet.h"
-#include <WinSock2.h>
-#include <WS2tcpip.h>
 #include <functional>
 #include <queue>
 #include <mutex>
