@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "../Input/Input.h"
 #include "../Graphics/DX11Manager.h"
+#include "../Utility/Common.h"
 
 BattleScene::BattleScene(bool isHost, Client* client, Server* server)
     : m_isHost(isHost), m_client(client), m_server(server)
