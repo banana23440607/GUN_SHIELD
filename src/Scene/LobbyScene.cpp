@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "BattleScene.h"
 #include "../Input/Input.h"
+#include "../Graphics/DX11Manager.h"
 
 LobbyScene::LobbyScene(bool isHost, const std::string& playerName, const std::string& hostIp)
     : m_isHost(isHost), m_playerName(playerName), m_hostIp(hostIp)
@@ -52,7 +53,8 @@ void LobbyScene::Update(float dt)
 
 void LobbyScene::Draw()
 {
-    // TODO: テキスト描画（参加者一覧、チームステータス）
+    // ロビー: 濃い青
+    DX11Manager::Get().BeginFrame(0.05f, 0.05f, 0.25f);
 }
 
 void LobbyScene::Shutdown()

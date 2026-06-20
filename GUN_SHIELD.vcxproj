@@ -144,6 +144,7 @@
     <ClCompile Include="src\Main\main.cpp" />
     <ClCompile Include="src\Main\Application.cpp" />
     <ClCompile Include="src\Graphics\DX11Manager.cpp" />
+    <ClCompile Include="src\Graphics\MeshRenderer.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\Network\NetworkBase.cpp" />
     <ClCompile Include="src\Network\Server.cpp" />
@@ -159,6 +160,7 @@
   <ItemGroup>
     <ClInclude Include="src\Main\Application.h" />
     <ClInclude Include="src\Graphics\DX11Manager.h" />
+    <ClInclude Include="src\Graphics\MeshRenderer.h" />
     <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\Network\Packet.h" />
     <ClInclude Include="src\Network\NetworkBase.h" />

@@ -18,6 +18,13 @@ bool BattleScene::Init()
         m_localTeam = m_client->GetLocalTeam();
     }
 
+    if (!MeshRenderer::Get().Init()) return false;
+
+    // プレイヤー: 幅0.6 高さ1.8 奥行0.6 のボックス
+    m_playerMesh = MeshRenderer::CreateBox(0.6f, 1.8f, 0.6f);
+    // 地面: 大きな平たいボックス
+    m_groundMesh = MeshRenderer::CreateBox(40.0f, 0.2f, 40.0f);
+
     HWND hwnd = DX11Manager::Get().GetHwnd();
     Input::Get().SetCaptureMouse(true, hwnd);
 
@@ -139,9 +146,73 @@ void BattleScene::ProcessClientPackets()
     }
 }
 
+XMMATRIX BattleScene::BuildViewProj() const
+{
+    // 自分のスナップショットを探す
+    XMFLOAT3 target = { 0, 0, 0 };
+    for (int i = 0; i < m_lastState.count; ++i)
+    {
+        if (m_lastState.snapshots[i].id == m_localId)
+        {
+            target = m_lastState.snapshots[i].position.ToFloat3();
+            break;
+        }
+    }
+
+    // TPS カメラ: プレイヤーの後ろ上方から追従
+    float yaw = Input::Get().GetYaw();
+    XMFLOAT3 offset = {
+        -sinf(yaw) * 6.0f,
+        3.5f,
+        -cosf(yaw) * 6.0f
+    };
+    XMVECTOR eye    = XMVectorSet(target.x + offset.x,
+                                   target.y + offset.y,
+                                   target.z + offset.z, 0);
+    XMVECTOR focus  = XMVectorSet(target.x, target.y + 1.0f, target.z, 0);
+    XMVECTOR up     = XMVectorSet(0, 1, 0, 0);
+
+    XMMATRIX view = XMMatrixLookAtLH(eye, focus, up);
+    XMMATRIX proj = XMMatrixPerspectiveFovLH(
+        XMConvertToRadians(60.0f),
+        static_cast<float>(SCREEN_WIDTH) / SCREEN_HEIGHT,
+        0.1f, 500.0f);
+    return view * proj;
+}
+
 void BattleScene::Draw()
 {
-    // TODO: プレイヤーの3Dモデル描画
+    // バトル: 暗い緑（屋外フィールドイメージ）
+    DX11Manager::Get().BeginFrame(0.08f, 0.12f, 0.08f);
+
+    XMMATRIX viewProj = BuildViewProj();
+
+    // 地面（灰色）
+    XMMATRIX groundWorld = XMMatrixTranslation(0, -0.1f, 0);
+    MeshRenderer::Get().Draw(m_groundMesh, groundWorld, viewProj, { 0.4f, 0.4f, 0.4f, 1.0f });
+
+    // 各プレイヤーを描画
+    for (int i = 0; i < m_lastState.count; ++i)
+    {
+        const auto& snap = m_lastState.snapshots[i];
+        if (snap.state != PlayerState::Alive) continue;
+
+        XMFLOAT3 pos = snap.position.ToFloat3();
+        XMMATRIX world = XMMatrixRotationY(snap.yaw) *
+                         XMMatrixTranslation(pos.x, pos.y + 0.9f, pos.z);
+
+        // 銃陣営: オレンジ、盾陣営: 水色
+        bool isLocal = (snap.id == m_localId);
+        XMFLOAT4 tint;
+        if (isLocal)
+            tint = { 1.0f, 1.0f, 0.0f, 1.0f };   // 自分: 黄
+        else if (m_localTeam == Team::Gunner)
+            tint = { 1.0f, 0.4f, 0.1f, 1.0f };   // 敵: オレンジ
+        else
+            tint = { 0.2f, 0.7f, 1.0f, 1.0f };   // 敵: 水色
+
+        MeshRenderer::Get().Draw(m_playerMesh, world, viewProj, tint);
+    }
 }
 
 void BattleScene::Shutdown()

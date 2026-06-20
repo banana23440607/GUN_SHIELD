@@ -5,6 +5,7 @@
 #include "../Network/Server.h"
 #include "../Game/Player/PlayerManager.h"
 #include "../Network/Packet.h"
+#include "../Graphics/MeshRenderer.h"
 #include <array>
 
 // バトルシーン
@@ -41,4 +42,12 @@ private:
     Team           m_localTeam = Team::None;
 
     uint32_t m_inputSequence = 0;
+
+    // 描画
+    Mesh   m_playerMesh;   // 全プレイヤー共通のボックスメッシュ
+    Mesh   m_groundMesh;
+
+    // TPS カメラ
+    XMFLOAT3 m_camPos   = { 0, 5, -10 };
+    XMMATRIX BuildViewProj() const;
 };
