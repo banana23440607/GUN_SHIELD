@@ -35,7 +35,11 @@ void Server::Stop()
         if (c.active)
             closesocket(c.sock);
     }
+
     if (m_acceptThread.joinable()) m_acceptThread.join();
+
+    for (auto& c : m_clients)
+        if (c.recvThread.joinable()) c.recvThread.join();
 }
 
 void Server::Update()

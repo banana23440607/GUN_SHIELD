@@ -19,6 +19,7 @@ bool LobbyScene::Init()
     {
         m_server = std::make_unique<Server>();
         if (!m_server->Start(DEFAULT_PORT)) return false;
+        Sleep(100);  // AcceptLoop が立ち上がるまで待つ
     }
 
     m_client = std::make_unique<Client>();
